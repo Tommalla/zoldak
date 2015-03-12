@@ -9,19 +9,20 @@
 #include <memory>
 #include <random>
 
-#include "../../ZkCommon/Constants.h"
-#include "../../ZkCommon/LibraryCast.h"
-#include "../../ZkCommon/Level.h"
+#include "../../ZkCommon/Constants.hpp"
+#include "../../ZkCommon/LibraryCast.hpp"
+#include "../../ZkCommon/Level.hpp"
 
-#include "../SpawnerMesh.h"
+#include "../SpawnerMesh.hpp"
 
-#include "Entity.h"
-#include "SpawnerMeshEntity.h"
-#include "MedKitEntity.h"
-#include "GrenadePackEntity.h"
-#include "../Game.h"
-#include "../Renderables/Renderable.h"
-#include "../Renderables/MeshRenderable.h"
+#include "Entity.hpp"
+#include "SpawnerMeshEntity.hpp"
+#include "MedKitEntity.hpp"
+#include "GrenadePackEntity.hpp"
+#include "../Game.hpp"
+#include "../GameSystem.hpp"
+#include "../Renderables/Renderable.hpp"
+#include "../Renderables/MeshRenderable.hpp"
 
 using namespace Zk::Common;
 using namespace Zk::Game;
@@ -35,9 +36,9 @@ SpawnerMeshEntity::SpawnerMeshEntity(const LevelLayer * ll, LayerType lt)
 
 	itemCount = 0;
 	if (lt == LayerType::MEDKIT_SPAWN)
-		maxItemCount = Constants::MAX_MEDKITS_ON_MAP;
+		maxItemCount = GameSystem::getInstance()->getConfig().settingsConfig.maxMedkitsOnMap();
 	else
-		maxItemCount = Constants::MAX_GRENADE_PACKS_ON_MAP;
+		maxItemCount = GameSystem::getInstance()->getConfig().settingsConfig.maxGrenadePacksOnMap();
 
 	setRenderable(nullptr);
 	setBody(nullptr);

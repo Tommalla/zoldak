@@ -3,6 +3,7 @@ set(SOURCES
 	Camera.cpp
 	Player.cpp
 	PlayerUI.cpp
+	PlayerUILayout.cpp
 	Physics.cpp
 	Game.cpp
 	GameSystem.cpp
@@ -28,6 +29,10 @@ set(SOURCES
 	Renderables/CrosshairRenderable.cpp
 	Renderables/BulletRenderable.cpp
 
+	Renderables/GraphicsLayers/GraphicsLayer.cpp
+	Renderables/GraphicsLayers/ContainerGraphicsLayer.cpp
+	Renderables/GraphicsLayers/FovGraphicsLayer.cpp
+
 	Weapons/Weapon.cpp
 	Weapons/WeaponDef.cpp
 
@@ -35,6 +40,7 @@ set(SOURCES
 	Lobby/PlayTab.cpp
 	Lobby/GraphicsTab.cpp
 	Lobby/InputTab.cpp
+	Lobby/SettingsTab.cpp
 	Lobby/InputChoiceDialog.cpp
 	Lobby/MouseChoiceDialog.cpp
 
@@ -43,6 +49,7 @@ set(SOURCES
 	Config/InputConfig.cpp
 	Config/PlayerAction.cpp
 	Config/InputAction.cpp
+	Config/SettingsConfig.cpp
 )
 
 set(LIBS

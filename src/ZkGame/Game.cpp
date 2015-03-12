@@ -10,29 +10,33 @@
 #include <list>
 #include <memory>
 
-#include "../ZkCommon/Constants.h"
-#include "../ZkCommon/Level.h"
+#include "../ZkCommon/Constants.hpp"
+#include "../ZkCommon/Level.hpp"
 
-#include "Config/Config.h"
-#include "Config/GraphicsConfig.h"
-#include "Lobby/LobbyWindow.h"
+#include "Config/Config.hpp"
+#include "Config/GraphicsConfig.hpp"
+#include "Lobby/LobbyWindow.hpp"
 
-#include "Game.h"
-#include "GameSystem.h"
-#include "InputSystem.h"
-#include "Player.h"
-#include "PlayerUI.h"
-#include "SpawnerMesh.h"
-#include "Entities/Entity.h"
-#include "Entities/CrateEntity.h"
-#include "Entities/PlayerEntity.h"
-#include "Entities/LevelMeshEntity.h"
-#include "Entities/SpawnerMeshEntity.h"
-#include "Entities/PlayerTrackEntity.h"
-#include "Renderables/Renderable.h"
-#include "Weapons/WeaponDef.h"
-#include "Weapons/Weapon.h"
-#include "Camera.h"
+#include "Game.hpp"
+#include "GameSystem.hpp"
+#include "InputSystem.hpp"
+#include "Player.hpp"
+#include "PlayerUI.hpp"
+#include "SpawnerMesh.hpp"
+#include "Entities/Entity.hpp"
+#include "Entities/CrateEntity.hpp"
+#include "Entities/PlayerEntity.hpp"
+#include "Entities/LevelMeshEntity.hpp"
+#include "Entities/SpawnerMeshEntity.hpp"
+#include "Entities/PlayerTrackEntity.hpp"
+#include "Renderables/Renderable.hpp"
+#include "Renderables/GraphicsLayers/GraphicsLayer.hpp"
+#include "Renderables/GraphicsLayers/ContainerGraphicsLayer.hpp"
+#include "Renderables/GraphicsLayers/FovGraphicsLayer.hpp"
+#include "Weapons/WeaponDef.hpp"
+#include "Weapons/Weapon.hpp"
+#include "Camera.hpp"
+
 
 using namespace Zk::Common;
 using namespace Zk::Game;
@@ -43,11 +47,14 @@ Game * Game::instance = nullptr;
 
 Game::Game(QString levelName) :
 	physicsSystem(),
+	rootLayer("", ""),
 	players{
 		Player(0),
 		Player(1)
 	}
 {
+	const Config & config = GameSystem::getInstance()->getConfig();
+
 	instance = this;
 	hasFocus = true;
 
@@ -59,6 +66,24 @@ Game::Game(QString levelName) :
 		QDataStream ds(&f);
 		ds >> level;
 	}
+
+	const LevelLayer * fovObscurant = level.getLayers()[(int)LayerType::MIDGROUND];
+	sf::VertexArray verts;
+	fovObscurant->constructOutline(verts);
+
+	objectsLayer = std::make_shared<FovGraphicsLayer>(verts, "", "OBJECTS");
+	objectsLayer->setFovEffectEnabled(config.settingsConfig.enabledFovEffect());
+
+	graphicsLayers = {
+		std::make_shared<ContainerGraphicsLayer>("", "BACKGROUND"),
+		objectsLayer,
+		std::make_shared<ContainerGraphicsLayer>("", "MIDGROUND"),
+		std::make_shared<ContainerGraphicsLayer>("", "FOREGROUND"),
+		std::make_shared<ContainerGraphicsLayer>("", "UI")
+	};
+
+	for (auto p : graphicsLayers)
+		rootLayer.addChild(p);
 }
 
 Game::~Game()
@@ -81,9 +106,7 @@ void Game::addEntity(std::shared_ptr<Entity> ent)
 	auto ptr = r.lock();
 
 	if (ptr != nullptr)
-		renderables.insert(
-			std::make_pair(r.lock()->getZValue(), r)
-		);
+		rootLayer.addChild(ptr);
 }
 
 sf::Vector2f Game::getViewportDimensions() const
@@ -173,6 +196,7 @@ void Game::initializeGameLoop()
 			level.getLayers()[(int)LayerType::PLAYER_B_SPAWN]
 		));
 		players[1].setInputConfig(config.playerInputConfig[1]);
+
 	}
 
 	auto track = std::make_shared<PlayerTrackEntity>(0);
@@ -236,9 +260,6 @@ void Game::gameLoop()
 			ent->update(MILLIS_PER_FRAME);
 
 		//Render
-		removeInactiveRenderables();
-		refreshZOrder();
-
 		renderWindow.clear(sf::Color::White);
 
 		std::vector<sf::View> views = camera->getViews();
@@ -247,12 +268,7 @@ void Game::gameLoop()
 		for (sf::View view : views)
 		{
 			renderWindow.setView(view);
-			for (auto p : renderables)
-			{
-				auto ptr = p.second.lock();
-				if (ptr->visibleToPlayer(players[viewid]))
-					ptr->paint(&renderWindow);
-			}
+			rootLayer.paint(&renderWindow, players[viewid]);
 
 			//Teraz rysujemy UI
 			players[viewid].paintUI(&renderWindow);
@@ -326,38 +342,6 @@ void Game::removeInactiveEntities()
 			return ent->wantsToBeDeleted();
 		}
 	);
-}
-
-void Game::removeInactiveRenderables()
-{
-	for (auto it = renderables.begin(); it != renderables.end();)
-	{
-		if (it->second.expired())
-			renderables.erase(it++);
-		else
-			it++;
-	}
-}
-
-void Game::refreshZOrder()
-{
-	std::vector<std::weak_ptr<Renderable>> renderablesToChange;
-	for (auto it = renderables.begin(); it != renderables.end();)
-	{
-		auto ptr = it->second.lock();
-		if (it->first != ptr->getZValue())
-		{
-			renderablesToChange.push_back(it->second);
-			renderables.erase(it++);
-		}
-		else
-			it++;
-	}
-
-	for (std::weak_ptr<Renderable> r : renderablesToChange)
-		renderables.insert(
-			std::make_pair(r.lock()->getZValue(), r)
-		);
 }
 
 void Game::cleanupGameLoop()

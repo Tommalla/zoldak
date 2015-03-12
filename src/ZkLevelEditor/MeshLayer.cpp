@@ -1,12 +1,12 @@
-#include "../ZkCommon/Constants.h"
-#include "../ZkCommon/Level.h"
+#include "../ZkCommon/Constants.hpp"
+#include "../ZkCommon/Level.hpp"
 
-#include "MeshLayer.h"
-#include "MeshTriangle.h"
-#include "MeshTriangleNode.h"
-#include "MeshTriangleEdge.h"
-#include "ColorPaletteWidget.h"
-#include "EditState.h"
+#include "MeshLayer.hpp"
+#include "MeshTriangle.hpp"
+#include "MeshTriangleNode.hpp"
+#include "MeshTriangleEdge.hpp"
+#include "ColorPaletteWidget.hpp"
+#include "EditState.hpp"
 
 #include <SFML/Graphics.hpp>
 
@@ -74,11 +74,11 @@ bool MeshLayer::fromCommonLevelLayer(const Common::LevelLayer & ll)
 {
 	clear();
 
-	const std::vector<sf::Vertex> & vs = ll.getVertices();
+	const QVector<sf::Vertex> & vs = ll.getVertices();
 	for (const sf::Vertex & v : vs)
 		createNode(QPointF(v.position.x, v.position.y));
 
-	const std::vector<Common::triangleDesc_t> & tds = ll.getTriangleDescriptions();
+	const QVector<Common::triangleDesc_t> & tds = ll.getTriangleDescriptions();
 	for (const Common::triangleDesc_t & td : tds)
 	{
 		MeshTriangle * mt = formTriangle(
@@ -98,12 +98,12 @@ bool MeshLayer::fromCommonLevelLayer(const Common::LevelLayer & ll)
 	return true;
 }
 
-void MeshLayer::toCommonLevelLayer(Common::LevelLayer & ll) const
+LevelLayer MeshLayer::toCommonLevelLayer() const
 {
-	std::vector<sf::Vertex> vs;
+	QVector<sf::Vertex> vs;
 	vs.reserve(nodes.size());
 
-	ll.clear();
+	LevelLayer ll;
 	for (MeshTriangleNode * mtn : nodes)
 	{
 		QPointF pos = mtn->pos();
@@ -118,7 +118,7 @@ void MeshLayer::toCommonLevelLayer(Common::LevelLayer & ll) const
 	for (MeshTriangleNode * mtn : nodes)
 		nodeIndexes.insert(mtn, id++);
 
-	std::vector<Common::triangleDesc_t> tds;
+	QVector<Common::triangleDesc_t> tds;
 	tds.reserve(triangles.size());
 	for (MeshTriangle * mt : triangles)
 	{
@@ -136,6 +136,7 @@ void MeshLayer::toCommonLevelLayer(Common::LevelLayer & ll) const
 	}
 
 	ll.setTriangleDescriptions(tds);
+	return ll;
 }
 
 EditState MeshLayer::getState() const

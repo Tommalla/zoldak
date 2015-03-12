@@ -5,18 +5,18 @@
 
 #include <memory>
 
-#include "../../ZkCommon/Constants.h"
-#include "../../ZkCommon/LibraryCast.h"
+#include "../../ZkCommon/Constants.hpp"
+#include "../../ZkCommon/LibraryCast.hpp"
 
-#include "../Renderables/Renderable.h"
-#include "../Renderables/CrosshairRenderable.h"
+#include "../Renderables/Renderable.hpp"
+#include "../Renderables/CrosshairRenderable.hpp"
 
-#include "Entity.h"
-#include "CrosshairEntity.h"
-#include "PlayerEntity.h"
-#include "../GameSystem.h"
-#include "../Game.h"
-#include "../InputSystem.h"
+#include "Entity.hpp"
+#include "CrosshairEntity.hpp"
+#include "PlayerEntity.hpp"
+#include "../GameSystem.hpp"
+#include "../Game.hpp"
+#include "../InputSystem.hpp"
 
 using namespace Zk::Common;
 using namespace Zk::Game;
@@ -39,7 +39,10 @@ CrosshairEntity::~CrosshairEntity()
 
 void CrosshairEntity::registerMe()
 {
-	setRenderable(new CrosshairRenderable(shared_from_this(), owner));
+	setRenderable(new CrosshairRenderable(
+		"UI",
+		shared_from_this(), owner
+	));
 }
 
 void CrosshairEntity::update(double step)

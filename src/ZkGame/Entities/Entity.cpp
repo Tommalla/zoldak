@@ -3,10 +3,10 @@
 
 #include <memory>
 
-#include "../../ZkCommon/LibraryCast.h"
+#include "../../ZkCommon/LibraryCast.hpp"
 
-#include "Entity.h"
-#include "../Renderables/Renderable.h"
+#include "Entity.hpp"
+#include "../Renderables/Renderable.hpp"
 
 using namespace Zk::Common;
 using namespace Zk::Game;
@@ -25,12 +25,6 @@ Entity::~Entity()
 		b2World * world = body->GetWorld();
 		world->DestroyBody(body);
 	}
-}
-
-void Entity::paint(sf::RenderTarget * rt)
-{
-	if (visualRep)
-		visualRep->paint(rt);
 }
 
 sf::Vector2f Entity::getCenterPosition() const
@@ -55,6 +49,13 @@ void Entity::setBody(b2Body * b)
 	}
 
 	body = b;
+}
+
+EntityType Entity::getType() const
+{
+	//connected with #issue3
+	//printf("Entity getType called\n");
+	return EntityType::Unknown;
 }
 
 void Entity::markForDeletion()

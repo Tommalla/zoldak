@@ -8,16 +8,16 @@
 #include <array>
 #include <memory>
 
-#include "../../ZkCommon/Constants.h"
-#include "../../ZkCommon/LibraryCast.h"
+#include "../../ZkCommon/Constants.hpp"
+#include "../../ZkCommon/LibraryCast.hpp"
 
-#include "GrenadeEntity.h"
-#include "PlayerEntity.h"
-#include "../Renderables/BoxRenderable.h"
-#include "../Player.h"
-#include "../Physics.h"
-#include "../Game.h"
-#include "../GameSystem.h"
+#include "GrenadeEntity.hpp"
+#include "PlayerEntity.hpp"
+#include "../Renderables/BoxRenderable.hpp"
+#include "../Player.hpp"
+#include "../Physics.hpp"
+#include "../Game.hpp"
+#include "../GameSystem.hpp"
 
 using namespace Zk::Common;
 using namespace Zk::Game;
@@ -60,9 +60,9 @@ GrenadeEntity::GrenadeEntity(
 	setFilteringBody(body);
 
 	BoxRenderable * br = new BoxRenderable(
+		"OBJECTS",
 		body, GameSystem::resourcePath("grenade-particle.png").c_str()
 	);
-	br->setZValue(-(double)LayerType::MIDGROUND);
 	setRenderable(br);
 }
 

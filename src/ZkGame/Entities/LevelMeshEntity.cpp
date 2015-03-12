@@ -5,16 +5,16 @@
 #include <limits>
 #include <map>
 
-#include "../../ZkCommon/Constants.h"
-#include "../../ZkCommon/LibraryCast.h"
-#include "../../ZkCommon/Level.h"
+#include "../../ZkCommon/Constants.hpp"
+#include "../../ZkCommon/LibraryCast.hpp"
+#include "../../ZkCommon/Level.hpp"
 
-#include "LevelMeshEntity.h"
-#include "Entity.h"
-#include "../Game.h"
-#include "../GameSystem.h"
-#include "../Renderables/Renderable.h"
-#include "../Renderables/MeshRenderable.h"
+#include "LevelMeshEntity.hpp"
+#include "Entity.hpp"
+#include "../Game.hpp"
+#include "../GameSystem.hpp"
+#include "../Renderables/Renderable.hpp"
+#include "../Renderables/MeshRenderable.hpp"
 
 using namespace Zk::Common;
 using namespace Zk::Game;
@@ -30,8 +30,10 @@ LevelMeshEntity::LevelMeshEntity(const LevelLayer * ll, LayerType lt)
 	sf::VertexArray varr;
 	ll->constructMesh(varr);
 
-	Renderable * r = new MeshRenderable(varr);
-	r->setZValue(-(double)lt);
+	Renderable * r = new MeshRenderable(
+		getLayerNameByType(lt),
+		varr
+	);
 	setRenderable(r);
 
 	if (lt == LayerType::MIDGROUND)
@@ -63,8 +65,8 @@ static b2Body * createLevelLayerCollisionMesh(const LevelLayer * ll)
 
 	b2World & world = Game::getInstance()->getPhysicsSystem().getWorld();
 
-	const std::vector<sf::Vertex> & verts = ll->getVertices();
-	const std::vector<triangleDesc_t> & tris = ll->getTriangleDescriptions();
+	const QVector<sf::Vertex> & verts = ll->getVertices();
+	const QVector<triangleDesc_t> & tris = ll->getTriangleDescriptions();
 
 	std::map<std::pair<int, int>, int> edges;
 
@@ -106,7 +108,7 @@ static b2Body * createLevelLayerCollisionMesh(const LevelLayer * ll)
 		int firstVert = edges.begin()->first.first;
 		int currVert = firstVert;
 
-		std::vector<b2Vec2> points;
+		QVector<b2Vec2> points;
 
 		do
 		{

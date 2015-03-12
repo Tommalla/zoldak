@@ -5,16 +5,16 @@
 
 #include <memory>
 
-#include "../../ZkCommon/Constants.h"
-#include "../../ZkCommon/LibraryCast.h"
+#include "../../ZkCommon/Constants.hpp"
+#include "../../ZkCommon/LibraryCast.hpp"
 
-#include "BulletEntity.h"
-#include "PlayerEntity.h"
-#include "../Renderables/BulletRenderable.h"
-#include "../Player.h"
-#include "../Physics.h"
-#include "../Game.h"
-#include "../GameSystem.h"
+#include "BulletEntity.hpp"
+#include "PlayerEntity.hpp"
+#include "../Renderables/BulletRenderable.hpp"
+#include "../Player.hpp"
+#include "../Physics.hpp"
+#include "../Game.hpp"
+#include "../GameSystem.hpp"
 
 using namespace Zk::Common;
 using namespace Zk::Game;
@@ -67,9 +67,11 @@ void BulletEntity::registerMe()
 		shared_from_this()
 	);
 
-	BulletRenderable * br = new BulletRenderable(shared_from_this());
+	BulletRenderable * br = new BulletRenderable(
+		"OBJECTS",
+		shared_from_this()
+	);
 
-	br->setZValue(-(double)LayerType::MIDGROUND);
 	setRenderable(br);
 }
 

@@ -7,27 +7,26 @@
 #include <algorithm>
 #include <memory>
 #include <utility>
-#include <vector>
 
 #include <QtCore>
 #include <QDebug>
 
-#include "../../ZkCommon/Constants.h"
-#include "../../ZkCommon/LibraryCast.h"
+#include "../../ZkCommon/Constants.hpp"
+#include "../../ZkCommon/LibraryCast.hpp"
 
-#include "PlayerEntity.h"
-#include "MedKitEntity.h"
-#include "GrenadePackEntity.h"
-#include "CrosshairEntity.h"
-#include "../Config/InputConfig.h"
-#include "../Config/PlayerAction.h"
-#include "../Config/InputAction.h"
-#include "../Renderables/BoxRenderable.h"
-#include "../Weapons/WeaponDef.h"
-#include "../Weapons/Weapon.h"
-#include "../Game.h"
-#include "../GameSystem.h"
-#include "../InputSystem.h"
+#include "PlayerEntity.hpp"
+#include "MedKitEntity.hpp"
+#include "GrenadePackEntity.hpp"
+#include "CrosshairEntity.hpp"
+#include "../Config/InputConfig.hpp"
+#include "../Config/PlayerAction.hpp"
+#include "../Config/InputAction.hpp"
+#include "../Renderables/BoxRenderable.hpp"
+#include "../Weapons/WeaponDef.hpp"
+#include "../Weapons/Weapon.hpp"
+#include "../Game.hpp"
+#include "../GameSystem.hpp"
+#include "../InputSystem.hpp"
 
 using namespace Zk::Common;
 using namespace Zk::Game;
@@ -112,9 +111,9 @@ PlayerEntity::PlayerEntity(
 		characterPath = "soldier-B.png";
 
 	BoxRenderable * br = new BoxRenderable(
+		"OBJECTS",
 		body, GameSystem::resourcePath(characterPath).c_str()
 	);
-	br->setZValue(-(double)LayerType::MIDGROUND);
 	setRenderable(br);
 
 	jumpCooldown = 0.0;

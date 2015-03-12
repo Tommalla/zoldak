@@ -1,12 +1,12 @@
 #include <algorithm>
 #include <memory>
 
-#include "Player.h"
-#include "Entities/PlayerEntity.h"
-#include "Config/InputConfig.h"
-#include "SpawnerMesh.h"
-#include "Game.h"
-#include "GameSystem.h"
+#include "Player.hpp"
+#include "Entities/PlayerEntity.hpp"
+#include "Config/InputConfig.hpp"
+#include "SpawnerMesh.hpp"
+#include "Game.hpp"
+#include "GameSystem.hpp"
 
 using namespace Zk::Game;
 
@@ -84,7 +84,7 @@ void Player::update(double step)
 			Game::getInstance()->addEntity(ptr);
 			entity = ptr;
 
-			timeToRespawn = RESPAWN_TIME;
+			timeToRespawn = GameSystem::getInstance()->getConfig().settingsConfig.respawnTime();
 		}
 	}
 }

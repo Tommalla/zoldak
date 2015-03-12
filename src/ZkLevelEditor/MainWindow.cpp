@@ -1,9 +1,9 @@
-#include "../ZkCommon/Constants.h"
-#include "../ZkCommon/Level.h"
+#include "../ZkCommon/Constants.hpp"
+#include "../ZkCommon/Level.hpp"
 
-#include "MainWindow.h"
-#include "LevelView.h"
-#include "ColorPaletteWidget.h"
+#include "MainWindow.hpp"
+#include "LevelView.hpp"
+#include "ColorPaletteWidget.hpp"
 
 #include <QtCore>
 #include <QtGui>
@@ -116,12 +116,9 @@ void MainWindow::saveLevel()
 
 	QDataStream ds(&f);
 
-	Level l;
-	levelView->toCommonLevel(l);
+	Level l = levelView->toCommonLevel();
 
-	std::vector<QColor> palette;
-	paletteWidget->toColorList(palette);
-	l.setPalette(palette);
+	l.setPalette(paletteWidget->toColorList());
 
 	ds << l;
 }

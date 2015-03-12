@@ -1,10 +1,8 @@
-#include "ColorPaletteWidget.h"
-#include "ColorBox.h"
+#include "ColorPaletteWidget.hpp"
+#include "ColorBox.hpp"
 
 #include <QtCore>
 #include <QtGui>
-
-#include <vector>
 
 using namespace Zk::LevelEditor;
 
@@ -50,7 +48,7 @@ ColorPaletteWidget::~ColorPaletteWidget()
 
 }
 
-void ColorPaletteWidget::fromColorList(const std::vector<QColor> & colors)
+void ColorPaletteWidget::fromColorList(const QVector<QColor> & colors)
 {
 	int rows = (int)(colors.size() + NUM_COLUMNS - 1) / NUM_COLUMNS;
 	setRowCount(rows);
@@ -63,12 +61,13 @@ void ColorPaletteWidget::fromColorList(const std::vector<QColor> & colors)
 		boxes[i]->setColor(QColor(Qt::black));
 }
 
-void ColorPaletteWidget::toColorList(std::vector<QColor> & colors) const
+QVector<QColor> ColorPaletteWidget::toColorList() const
 {
-	colors.clear();
+	QVector<QColor> colors;
 
 	for (const ColorBox * cb : boxes)
 		colors.push_back(cb->getColor());
+	return colors;
 }
 
 QColor ColorPaletteWidget::getSelectedColor() const

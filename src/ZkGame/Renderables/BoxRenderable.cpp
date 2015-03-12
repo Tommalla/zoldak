@@ -5,22 +5,25 @@
 #include <QtGui>
 #include <QDebug>
 
-#include "../../ZkCommon/Constants.h"
-#include "../../ZkCommon/LibraryCast.h"
+#include "../../ZkCommon/Constants.hpp"
+#include "../../ZkCommon/LibraryCast.hpp"
 
-#include "../GameSystem.h"
-#include "../TextureCache.h"
+#include "../GameSystem.hpp"
+#include "../TextureCache.hpp"
+#include "../Player.hpp"
 
-#include "BoxRenderable.h"
-#include "Renderable.h"
+#include "BoxRenderable.hpp"
+#include "Renderable.hpp"
 
 using namespace Zk::Common;
 using namespace Zk::Game;
 
 BoxRenderable::BoxRenderable(
+	const std::string & hierarchyPath,
 	const b2Body * body,
 	const char * imgSrc
 )
+	: Renderable(hierarchyPath)
 {
 	this->body = body;
 
@@ -49,7 +52,7 @@ BoxRenderable::~BoxRenderable()
 
 }
 
-void BoxRenderable::paint(sf::RenderTarget * rt)
+void BoxRenderable::paint(sf::RenderTarget * rt, const Player & viewer)
 {
 	sprite.setPosition(lib_cast<sf::Vector2f>(body->GetPosition()));
 

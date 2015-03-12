@@ -1,13 +1,14 @@
 #include <QtCore>
 #include <QtGui>
 
-#include "../Config/Config.h"
-#include "../GameSystem.h"
+#include "../Config/Config.hpp"
+#include "../GameSystem.hpp"
 
-#include "LobbyWindow.h"
-#include "PlayTab.h"
-#include "GraphicsTab.h"
-#include "InputTab.h"
+#include "LobbyWindow.hpp"
+#include "PlayTab.hpp"
+#include "GraphicsTab.hpp"
+#include "InputTab.hpp"
+#include "SettingsTab.hpp"
 
 using namespace Zk::Game;
 
@@ -18,6 +19,7 @@ LobbyWindow::LobbyWindow(Config & config, QWidget * parent)
 	tabWidget->addTab(new PlayTab(config), "Game");
 	tabWidget->addTab(new GraphicsTab(config), "Graphics");
 	tabWidget->addTab(new InputTab(config), "Input");
+	tabWidget->addTab(new SettingsTab(config), "Settings");
 	
 	setWindowIcon(
 		QIcon(GameSystem::resourcePath("grenade-large.png").c_str())

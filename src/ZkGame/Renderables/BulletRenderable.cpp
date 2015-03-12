@@ -1,17 +1,22 @@
 #include <SFML/Graphics.hpp>
 
-#include "../Entities/Entity.h"
-#include "../Entities/BulletEntity.h"
+#include "../Entities/Entity.hpp"
+#include "../Entities/BulletEntity.hpp"
 
-#include "../GameSystem.h"
+#include "../GameSystem.hpp"
+#include "../Player.hpp"
 
-#include "BulletRenderable.h"
-#include "Renderable.h"
+#include "BulletRenderable.hpp"
+#include "Renderable.hpp"
 
 using namespace Zk::Common;
 using namespace Zk::Game;
 
-BulletRenderable::BulletRenderable(std::weak_ptr<BulletEntity> bullet)
+BulletRenderable::BulletRenderable(
+	const std::string & hierarchyPath,
+	std::weak_ptr<BulletEntity> bullet
+)
+	: Renderable(hierarchyPath)
 {
 	this->bullet = bullet;
 }
@@ -21,7 +26,7 @@ BulletRenderable::~BulletRenderable()
 
 }
 
-void BulletRenderable::paint(sf::RenderTarget * rt)
+void BulletRenderable::paint(sf::RenderTarget * rt, const Player & viewer)
 {
 	auto ptr = bullet.lock();
 
